@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Ryu-na X</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card login-card">
+            <div class="logo">
+                <div class="ryu-logo">🥷</div>
+                <h2>Login to Ryu-na X</h2>
+            </div>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>User ID</label>
+                    <input type="text" id="userID" placeholder="USER-123456 or ID-789012" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn-primary full-width">Login</button>
+            </form>
+            
+            <div class="auth-links">
+                <a href="/register.html">Create Account</a>
+                <a href="/">← Back to Home</a>
+            </div>
+            
+            <div id="errorMsg" class="error hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userID = document.getElementById('userID').value.trim();
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userID, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('ryuToken', data.token);
+                    localStorage.setItem('ryuUserID', data.userID);
+                    window.location.href = '/dashboard.html';
+                } else {
+                    showError(data.error || 'Login failed');
+                }
+            } catch (error) {
+                showError('Network error. Please try again.');
+            }
+        });
+        
+        function showError(msg) {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.textContent = msg;
+            errorEl.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
