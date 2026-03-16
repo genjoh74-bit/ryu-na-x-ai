@@ -208,9 +208,13 @@ app.get('/api/user', authenticateToken, (req, res) => {
   res.json({ userId: req.user.userId });
 });
 
-// 404 handler
+// 404 handler - Updated for cyberpunk login page
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  if (req.path === '/' || req.path === '/login' || req.path === '/register') {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  } else {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  }
 });
 
 // Error handler
@@ -225,6 +229,7 @@ async function startServer() {
   app.listen(PORT, () => {
     console.log(`ryu-na x made by Elvis running on port ${PORT}`);
     console.log(`API: http://localhost:${PORT}/api/health`);
+    console.log(`Login: http://localhost:${PORT}/`);
   });
 }
 
