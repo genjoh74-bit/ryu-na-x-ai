@@ -3,73 +3,409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Ryu-na X</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ryu-na x made by Elvis - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        /* Matrix Rain Background */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            10%, 90% { opacity: 1; }
+            50% { transform: translateY(-100px) rotate(180deg); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Glassmorphism Card */
+        .auth-card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 
+                0 25px 45px rgba(0, 0, 0, 0.8),
+                0 0 100px rgba(0, 255, 255, 0.2),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 25px 45px rgba(0, 0, 0, 0.8), 0 0 100px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1); }
+            to { box-shadow: 0 25px 45px rgba(0, 0, 0, 0.8), 0 0 120px rgba(0, 255, 255, 0.4), inset 0 0 30px rgba(0, 255, 255, 0.2); }
+        }
+
+        /* Logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            animation: pulse 1.5s ease-in-out infinite;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .logo p {
+            color: #00ff88;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Form */
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Input Fields */
+        .input-group {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00ff88;
+            font-size: 1.2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 255, 255, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Toggle */
+        .toggle-section {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .toggle-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            color: #00ffff;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Status Messages */
+        .status {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 700;
+            animation: slideIn 0.5s ease;
+        }
+
+        .status.error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            color: #ff4444;
+        }
+
+        .status.success {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            color: #00ff88;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .auth-card {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card login-card">
+    <canvas id="matrix"></canvas>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <div class="auth-card">
             <div class="logo">
-                <div class="ryu-logo">🥷</div>
-                <h2>Login to Ryu-na X</h2>
+                <h1>ryu-na x</h1>
+                <p>made by Elvis</p>
             </div>
-            
-            <form id="loginForm">
-                <div class="input-group">
-                    <label>User ID</label>
-                    <input type="text" id="userID" placeholder="USER-123456 or ID-789012" required>
-                </div>
+
+            <form id="authForm" class="auth-form">
+                <div id="status" class="status" style="display: none;"></div>
                 
                 <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <div class="input-icon">🔑</div>
+                    <input type="password" id="password" class="input-field" placeholder="Enter your access code" required>
                 </div>
-                
-                <button type="submit" class="btn-primary full-width">Login</button>
+
+                <button type="submit" id="submitBtn" class="btn">
+                    <span id="btnText">ACCESS TERMINAL</span>
+                </button>
+
+                <div class="toggle-section">
+                    <p class="toggle-text">No access code? Initialize new user:</p>
+                    <button type="button" id="toggleBtn" class="toggle-btn">CREATE USER ID</button>
+                </div>
             </form>
-            
-            <div class="auth-links">
-                <a href="/register.html">Create Account</a>
-                <a href="/">← Back to Home</a>
-            </div>
-            
-            <div id="errorMsg" class="error hidden"></div>
         </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Matrix Rain
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            const userID = document.getElementById('userID').value.trim();
-            const password = document.getElementById('password').value;
+            ctx.fillStyle = '#00ff88';
+            ctx.font = `${fontSize}px monospace`;
             
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userID, password })
-                });
+            drops.forEach((y, i) => {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, y * fontSize);
                 
-                const data = await response.json();
-                
-                if (data.success) {
-                    localStorage.setItem('ryuToken', data.token);
-                    localStorage.setItem('ryuUserID', data.userID);
-                    window.location.href = '/dashboard.html';
-                } else {
-                    showError(data.error || 'Login failed');
+                if (y * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
                 }
-            } catch (error) {
-                showError('Network error. Please try again.');
+                drops[i]++;
+            });
+        }
+
+        setInterval(drawMatrix, 50);
+
+        // Particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            document.getElementById('particles').appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, 7000);
+        }
+
+        setInterval(createParticle, 300);
+
+        // Auth Logic
+        let isLogin = true;
+        const form = document.getElementById('authForm');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const passwordInput = document.getElementById('password');
+        const status = document.getElementById('status');
+
+        toggleBtn.addEventListener('click', () => {
+            isLogin = !isLogin;
+            if (isLogin) {
+                btnText.textContent = 'ACCESS TERMINAL';
+                toggleBtn.textContent = 'CREATE USER ID';
+            } else {
+                btnText.textContent = 'INITIALIZE';
+                toggleBtn.textContent = 'I HAVE ACCESS';
             }
         });
-        
-        function showError(msg) {
-            const errorEl = document.getElementById('errorMsg');
-            errorEl.textContent = msg;
-            errorEl.classList.remove('hidden');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = passwordInput.value.trim();
+            
+            if (!password) return showStatus('Access code required', 'error');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>🔄 CONNECTING...</span>';
+
+            try {
+                const endpoint = isLogin ? '/api/login' : '/api/register';
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showStatus(`Welcome ${data.userId}!`, 'success');
+                    localStorage.setItem('token', data.token);
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 1500);
+                } else {
+                    showStatus(data.error || 'Access denied', 'error');
+                }
+            } catch (err) {
+                showStatus('Connection error. Check your neural link.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span id="btnText">' + btnText.textContent + '</span>';
+                passwordInput.value = '';
+            }
+        });
+
+        function showStatus(message, type) {
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 4000);
         }
+
+        // Resize canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
 </html>
